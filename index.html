@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ライブ会場入場権利確認システム - CAMPFIRE IDで入場権利を確認">
+  <title>ライブ入場確認システム</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ID入力画面 -->
+  <div class="container" id="input-screen">
+    <header>
+      <h1>ライブ入場確認</h1>
+      <p class="subtitle">CAMPFIRE IDで入場権利を確認</p>
+    </header>
+
+    <main>
+      <div class="input-section">
+        <label for="campfire-id">CAMPFIRE ID</label>
+        <input
+          type="text"
+          id="campfire-id"
+          placeholder="IDを入力してください"
+          autocomplete="off"
+        >
+        <div class="error-message" id="input-error"></div>
+        <button id="check-btn" class="btn-primary">入場権利を確認</button>
+      </div>
+
+      <div class="note">
+        ※CAMPFIREから通知されたIDを入力してください
+      </div>
+    </main>
+  </div>
+
+  <!-- 入場OK画面 -->
+  <div class="container result-container success" id="success-screen" style="display: none;">
+    <div class="icon-wrapper">
+      <div class="icon-success">✓</div>
+    </div>
+
+    <h2 class="result-title">入場OK</h2>
+
+    <div class="result-message">
+      <p>ようこそ!</p>
+      <p>ライブ会場へお進みください</p>
+    </div>
+
+    <div class="user-info" id="user-info">
+      <!-- ユーザー情報が表示される -->
+    </div>
+
+    <button class="btn-secondary" onclick="location.reload()">
+      最初に戻る
+    </button>
+  </div>
+
+  <!-- 入場NG画面 -->
+  <div class="container result-container error" id="error-screen" style="display: none;">
+    <div class="icon-wrapper">
+      <div class="icon-error">✕</div>
+    </div>
+
+    <h2 class="result-title">入場NG</h2>
+
+    <div class="result-message">
+      <p>入場権利が確認できません</p>
+      <p>スタッフにお声がけください</p>
+    </div>
+
+    <button class="btn-secondary" onclick="location.reload()">
+      最初に戻る
+    </button>
+  </div>
+
+  <!-- ローディング表示 -->
+  <div class="loading-overlay" id="loading-overlay" style="display: none;">
+    <div class="spinner"></div>
+    <p>確認中...</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
