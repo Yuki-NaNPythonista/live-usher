@@ -1,5 +1,5 @@
 // Google Apps Script URL (デプロイ後に更新してください)
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzZx7kRos-FoH18t4Gw45nmjb2xhndmkZKIRsV1dWYEf08RwRzZf2Ls9pHah2K0CSJH/exec';
+const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
 // DOM要素の取得
 const inputScreen = document.getElementById('input-screen');
@@ -89,7 +89,7 @@ function validateInput(campfireId) {
 }
 
 /**
- * API呼び出し - 入場権利確認
+ * API呼び出し - 入場権利確認 (GET版)
  */
 async function checkAccess(campfireId) {
   // SCRIPT_URLが設定されていない場合
@@ -98,17 +98,17 @@ async function checkAccess(campfireId) {
     throw new Error('Google Apps Script URLが設定されていません');
   }
 
-  console.log('=== API呼び出し開始 ===');
+  console.log('=== API呼び出し開始 (GET) ===');
   console.log('URL:', SCRIPT_URL);
   console.log('CAMPFIRE ID:', campfireId);
 
   try {
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-      body: JSON.stringify({ campfireId: campfireId }),
+    // GETリクエストなので、URLにパラメータを追加
+    const url = `${SCRIPT_URL}?campfireId=${encodeURIComponent(campfireId)}`;
+    console.log('Request URL:', url);
+
+    const response = await fetch(url, {
+      method: 'GET',
     });
 
     console.log('Response status:', response.status);
