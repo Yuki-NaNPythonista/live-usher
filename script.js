@@ -1,5 +1,5 @@
 // Google Apps Script URL (デプロイ後に更新してください)
-const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwuzqMhCN4m1juYsKbAqNNHI31ugFxQSV_fuiFvyxzi00WWQaCMUp0xd-CtUChNvL0j/exec';
 
 // DOM要素の取得
 const inputScreen = document.getElementById('input-screen');
