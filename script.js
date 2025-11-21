@@ -1,15 +1,17 @@
 // Google Apps Script URL (デプロイ後に更新してください)
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQuH89yFQ262AMkjtIR4AA0lDxO4injvVZJqZyEx1EXhUVar5RH8Zg3Mf2hh6Dq3LO/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby7uk2GVRezyJ0ABxYrRpM-oTxWENgWEmObCjVDUpAf7LSSeqd2pbQjHtWkBLBD4m79/exec';
 
 // DOM要素の取得
 const inputScreen = document.getElementById('input-screen');
-const successScreen = document.getElementById('success-screen');
+const successBothScreen = document.getElementById('success-both-screen');
+const successEntranceOnlyScreen = document.getElementById('success-entrance-only-screen');
 const errorScreen = document.getElementById('error-screen');
 const loadingOverlay = document.getElementById('loading-overlay');
 const campfireIdInput = document.getElementById('campfire-id');
 const checkBtn = document.getElementById('check-btn');
 const inputError = document.getElementById('input-error');
-const userInfo = document.getElementById('user-info');
+const userInfoBoth = document.getElementById('user-info-both');
+const userInfoEntrance = document.getElementById('user-info-entrance');
 
 // イベントリスナーの設定
 document.addEventListener('DOMContentLoaded', () => {
@@ -52,12 +54,24 @@ async function handleCheckAccess() {
     // ローディング非表示
     hideLoading();
 
-    // 結果に応じて画面表示
+    // 結果に応じて画面表示（3パターン）
     if (result.success && result.hasAccess) {
-      showSuccessScreen(result.data);
+      // パターン判定
+      if (result.pattern === 'both') {
+        // パターン1: 入場権利=有、リハ見学権利=有
+        showSuccessBothScreen(result.data);
+      } else if (result.pattern === 'entrance_only') {
+        // パターン2: 入場権利=有、リハ見学権利=無
+        showSuccessEntranceOnlyScreen(result.data);
+      } else {
+        // デフォルト（念のため）
+        showSuccessEntranceOnlyScreen(result.data);
+      }
     } else if (result.success && !result.hasAccess) {
+      // パターン3: 入場権利=無
       showErrorScreen();
     } else {
+      // IDが見つからない場合
       showError(result.message || '該当するIDが見つかりません');
     }
   } catch (error) {
@@ -146,9 +160,9 @@ async function checkAccess(campfireId) {
 }
 
 /**
- * 入場OK画面を表示
+ * 入場OK + リハ見学OK画面を表示（パターン1）
  */
-function showSuccessScreen(data) {
+function showSuccessBothScreen(data) {
   // 入力画面を非表示
   inputScreen.style.display = 'none';
 
@@ -161,13 +175,39 @@ function showSuccessScreen(data) {
     if (data.returnItem) {
       infoHTML += `<p><strong>リターン:</strong> ${escapeHtml(data.returnItem)}</p>`;
     }
-    userInfo.innerHTML = infoHTML;
+    infoHTML += `<p><strong>リハ見学:</strong> 可能</p>`;
+    userInfoBoth.innerHTML = infoHTML;
   } else {
-    userInfo.style.display = 'none';
+    userInfoBoth.style.display = 'none';
   }
 
-  // 成功画面を表示
-  successScreen.style.display = 'block';
+  // 両方OK画面を表示
+  successBothScreen.style.display = 'block';
+}
+
+/**
+ * 入場OK + リハ見学NG画面を表示（パターン2）
+ */
+function showSuccessEntranceOnlyScreen(data) {
+  // 入力画面を非表示
+  inputScreen.style.display = 'none';
+
+  // ユーザー情報を表示
+  if (data && (data.name || data.returnItem)) {
+    let infoHTML = '';
+    if (data.name) {
+      infoHTML += `<p><strong>お名前:</strong> ${escapeHtml(data.name)}</p>`;
+    }
+    if (data.returnItem) {
+      infoHTML += `<p><strong>リターン:</strong> ${escapeHtml(data.returnItem)}</p>`;
+    }
+    userInfoEntrance.innerHTML = infoHTML;
+  } else {
+    userInfoEntrance.style.display = 'none';
+  }
+
+  // 入場のみOK画面を表示
+  successEntranceOnlyScreen.style.display = 'block';
 }
 
 /**

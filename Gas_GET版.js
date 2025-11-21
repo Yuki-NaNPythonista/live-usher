@@ -25,18 +25,37 @@ function doGet(e) {
     const result = searchUser(campfireId.trim());
 
     if (result.found) {
-      if (result.hasAccess) {
+      // 入場権利とリハ見学権利の組み合わせで判定
+      if (result.hasAccess && result.hasRehearsalAccess) {
+        // パターン1: 入場権利=有、リハ見学権利=有
+        return createJsonResponse(
+          true,
+          true,
+          '入場権利とリハ見学権利があります',
+          result.data,
+          'both'
+        );
+      } else if (result.hasAccess && !result.hasRehearsalAccess) {
+        // パターン2: 入場権利=有、リハ見学権利=無
         return createJsonResponse(
           true,
           true,
           '入場権利があります',
-          result.data
+          result.data,
+          'entrance_only'
         );
       } else {
-        return createJsonResponse(true, false, '入場権利がありません');
+        // パターン3: 入場権利=無
+        return createJsonResponse(
+          true,
+          false,
+          '入場権利がありません',
+          null,
+          'none'
+        );
       }
     } else {
-      return createJsonResponse(false, false, '該当するIDが見つかりません');
+      return createJsonResponse(false, false, '該当するIDが見つかりません', null, 'not_found');
     }
 
   } catch (error) {
@@ -81,18 +100,23 @@ function searchUser(campfireId) {
 
       // IDが一致した場合
       if (id === campfireId) {
-        const name = row[1] ? String(row[1]) : '';          // B列: 氏名
-        const returnItem = row[2] ? String(row[2]) : '';    // C列: リターン内容
-        const access = row[3] ? String(row[3]).trim() : ''; // D列: 入場権利
+        const name = row[1] ? String(row[1]) : '';                   // B列: 氏名
+        const returnItem = row[2] ? String(row[2]) : '';             // C列: リターン内容
+        const access = row[3] ? String(row[3]).trim() : '';          // D列: 入場権利
+        const rehearsalAccess = row[4] ? String(row[4]).trim() : ''; // E列: リハ見学権利
+        const note = row[5] ? String(row[5]) : '';                   // F列: 備考
 
-        Logger.log('User found - ID: ' + id + ', Access: ' + access);
+        Logger.log('User found - ID: ' + id + ', Access: ' + access + ', RehearsalAccess: ' + rehearsalAccess);
 
         return {
           found: true,
           hasAccess: access === '有',
+          hasRehearsalAccess: rehearsalAccess === '有',
           data: {
             name: name || null,
-            returnItem: returnItem || null
+            returnItem: returnItem || null,
+            rehearsalAccess: rehearsalAccess || null,
+            note: note || null
           }
         };
       }
@@ -111,12 +135,17 @@ function searchUser(campfireId) {
 /**
  * JSONレスポンスを生成
  */
-function createJsonResponse(success, hasAccess, message, data = null) {
+function createJsonResponse(success, hasAccess, message, data = null, pattern = null) {
   const response = {
     success: success,
     hasAccess: hasAccess,
     message: message
   };
+
+  // パターン情報を追加
+  if (pattern) {
+    response.pattern = pattern;
+  }
 
   // データがある場合は追加
   if (data) {

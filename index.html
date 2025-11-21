@@ -34,20 +34,20 @@
     </main>
   </div>
 
-  <!-- 入場OK画面 -->
-  <div class="container result-container success" id="success-screen" style="display: none;">
+  <!-- 入場OK + リハ見学OK画面（パターン1: 両方有） -->
+  <div class="container result-container success" id="success-both-screen" style="display: none;">
     <div class="icon-wrapper">
-      <div class="icon-success">✓</div>
+      <div class="icon-success">✓✓</div>
     </div>
 
-    <h2 class="result-title">入場OK</h2>
+    <h2 class="result-title">入場OK + リハ見学OK</h2>
 
     <div class="result-message">
       <p>ようこそ!</p>
-      <p>ライブ会場へお進みください</p>
+      <p>ライブ会場とリハーサル見学へお進みください</p>
     </div>
 
-    <div class="user-info" id="user-info">
+    <div class="user-info" id="user-info-both">
       <!-- ユーザー情報が表示される -->
     </div>
 
@@ -56,7 +56,30 @@
     </button>
   </div>
 
-  <!-- 入場NG画面 -->
+  <!-- 入場OK + リハ見学NG画面（パターン2: 入場のみ有） -->
+  <div class="container result-container partial-success" id="success-entrance-only-screen" style="display: none;">
+    <div class="icon-wrapper">
+      <div class="icon-partial">✓</div>
+    </div>
+
+    <h2 class="result-title">入場OK</h2>
+
+    <div class="result-message">
+      <p>ようこそ!</p>
+      <p>ライブ会場へお進みください</p>
+      <p class="notice">※リハーサル見学権利はありません</p>
+    </div>
+
+    <div class="user-info" id="user-info-entrance">
+      <!-- ユーザー情報が表示される -->
+    </div>
+
+    <button class="btn-secondary" onclick="location.reload()">
+      最初に戻る
+    </button>
+  </div>
+
+  <!-- 入場NG画面（パターン3: 両方無） -->
   <div class="container result-container error" id="error-screen" style="display: none;">
     <div class="icon-wrapper">
       <div class="icon-error">✕</div>

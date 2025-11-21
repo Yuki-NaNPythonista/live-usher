@@ -176,13 +176,18 @@ input[type="text"].error {
   background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
 }
 
+.result-container.partial-success {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+}
+
 /* アイコン */
 .icon-wrapper {
   margin-bottom: 25px;
 }
 
 .icon-success,
-.icon-error {
+.icon-error,
+.icon-partial {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -203,6 +208,11 @@ input[type="text"].error {
 .icon-error {
   color: #f44336;
   border: 4px solid #f44336;
+}
+
+.icon-partial {
+  color: #FF9800;
+  border: 4px solid #FF9800;
 }
 
 @keyframes iconBounce {
@@ -234,6 +244,10 @@ input[type="text"].error {
   color: #f44336;
 }
 
+.partial-success .result-title {
+  color: #FF9800;
+}
+
 /* 結果メッセージ */
 .result-message {
   font-size: 18px;
@@ -243,6 +257,13 @@ input[type="text"].error {
 
 .result-message p {
   margin: 8px 0;
+}
+
+.result-message .notice {
+  font-size: 16px;
+  color: #FF9800;
+  font-weight: bold;
+  margin-top: 15px;
 }
 
 /* ユーザー情報 */
